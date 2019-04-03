@@ -1,10 +1,10 @@
 #### 安装使用
-#####安装
+##### 安装
 ```
 go get github.com/xhaoxiong/irisgo
 
 ```
-#####使用
+##### 使用
 ```
 >~ irisgo new [项目名称(默认为irisApp)] 
 >~/irisApp go mod init [项目名]
