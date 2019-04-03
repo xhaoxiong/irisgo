@@ -3,7 +3,6 @@
 ```
 App
 │ main.go
-│
 └ ─ ─conf[配置信息]
 │      config.yaml 
 └ ─ ─conifg[热加载与viper的启用]
