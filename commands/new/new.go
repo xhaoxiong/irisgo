@@ -108,7 +108,6 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/lexkong/log"
 	"github.com/spf13/viper"
-	"time"
 )
 
 type Database struct {
@@ -163,14 +162,18 @@ func setupDB(db *gorm.DB) {
 
 func autoMigrate(db *gorm.DB) {
 
-	if err := db.AutoMigrate(
-		&User{},
-	).Error;
+	if err := db.AutoMigrate().Error;
 		err != nil {
 		log.Error("自动建表失败", err)
 	}
 }
 
+func keepAlive(dbc *gorm.DB) {
+	for {
+		dbc.DB().Ping()
+		time.Sleep(60 * time.Second)
+	}
+}
 `
 
 var repositories = `package repositories
