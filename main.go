@@ -21,11 +21,17 @@ func main() {
 		log.Printf("Application '%s' already exists", currentpath)
 		os.Exit(0)
 	}
+	appName := ""
 	for v := range pflag.Args() {
-		if pflag.Args()[v] == "new" {
-			if pflag.Args()[v+1] != "" {
-				appName := pflag.Args()[v+1]
-				commands.CreatedApp(currentpath, appName)
+		if v == 0 {
+			if pflag.Args()[v] == "new" {
+				if pflag.Args()[0] == "" {
+					appName = "irisApp"
+				}
+				if pflag.Args()[v+1] != "" {
+					appName = pflag.Args()[v+1]
+					commands.CreatedApp(currentpath, appName)
+				}
 			}
 		}
 	}
