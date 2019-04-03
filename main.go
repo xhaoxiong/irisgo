@@ -7,8 +7,8 @@ package main
 
 import (
 	"github.com/spf13/pflag"
-	commands "github.com/xhaoxiong/irisgo/commands/new"
-	"github.com/xhaoxiong/irisgo/utils"
+	"irisgo/commands/new"
+	"irisgo/utils"
 	"log"
 	"os"
 )
