@@ -30,10 +30,10 @@ func main() {
 					if pflag.Args()[v+1] != "" {
 						appName = pflag.Args()[v+1]
 						commands.CreatedApp(currentpath, appName)
-					} else {
-						appName = "irisApp"
-						commands.CreatedApp(currentpath, appName)
 					}
+				} else {
+					appName = "irisApp"
+					commands.CreatedApp(currentpath, appName)
 				}
 
 			}
