@@ -7,8 +7,8 @@ package main
 
 import (
 	"github.com/spf13/pflag"
-	commands "irisgo/commands/new"
-	"irisgo/utils"
+	commands "github.com/xhaoxiong/irisgo/commands/new"
+	"github.com/xhaoxiong/irisgo/utils"
 	"log"
 	"os"
 )
@@ -31,7 +31,3 @@ func main() {
 	}
 
 }
-
-//获取当前路径
-
-//创建文件夹
