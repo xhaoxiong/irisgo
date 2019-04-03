@@ -7,6 +7,8 @@ package main
 
 import (
 	"github.com/spf13/pflag"
+	commands "irisgo/commands/new"
+	"irisgo/utils"
 	"log"
 	"os"
 )
@@ -15,7 +17,7 @@ func main() {
 
 	pflag.Parse()
 	currentpath, _ := os.Getwd()
-	if !IsExist(currentpath) {
+	if !utils.IsExist(currentpath) {
 		log.Printf("Application '%s' already exists", currentpath)
 		os.Exit(0)
 	}
@@ -23,7 +25,7 @@ func main() {
 		if pflag.Args()[v] == "new" {
 			if pflag.Args()[v+1] != "" {
 				appName := pflag.Args()[v+1]
-				CreatedApp(currentpath, appName)
+				commands.CreatedApp(currentpath, appName)
 			}
 		}
 	}
