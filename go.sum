@@ -1,0 +1,4 @@
+github.com/spf13/pflag v1.0.3 h1:zPAT6CGy6wXeQ7NtTnaTerfKOsV6V6F8agHXFiazDkg=
+github.com/spf13/pflag v1.0.3/go.mod h1:DYY7MBk1bdzusC3SYhjObp+wFpr4gzcvqqNjLnInEg4=
+github.com/xhaoxiong/irisgo v0.0.0-20190403095631-a384d195c52c h1:ZurBi6NfwsAPhhFWnXRmzVYacSar2gyt+vbgOyE2ttY=
+github.com/xhaoxiong/irisgo v0.0.0-20190403095631-a384d195c52c/go.mod h1:PLK6xahF4n2T9uOexUlaa5yHUtwaeg68J1/sjHU5upo=
