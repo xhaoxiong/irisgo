@@ -26,17 +26,19 @@ func main() {
 	if len(pflag.Args()) == 0 {
 		appName = "irisApp"
 		commands.CreatedApp(currentpath, appName)
-	}
-
-	for v := range pflag.Args() {
-		if v == 0 {
-			if pflag.Args()[v] == "new" {
-				if pflag.Args()[v+1] != "" {
-					appName = pflag.Args()[v+1]
-					commands.CreatedApp(currentpath, appName)
+	}else{
+		for v := range pflag.Args() {
+			if v == 0 {
+				if pflag.Args()[v] == "new" {
+					if pflag.Args()[v+1] != "" {
+						appName = pflag.Args()[v+1]
+						commands.CreatedApp(currentpath, appName)
+					}
 				}
 			}
 		}
 	}
+
+
 
 }
