@@ -6,7 +6,7 @@
 package commands
 
 import (
-	"irisgo/utils"
+	"github.com/xhaoxiong/irisgo/utils"
 	"log"
 	"os"
 	"path"
