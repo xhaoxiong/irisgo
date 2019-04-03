@@ -200,7 +200,7 @@ import (
 )
 
 type TestService struct {
-	repo *repositories.UserRepositories
+	repo *repositories.TestRepositories
 }
 
 func NewTestService() *TestService {
