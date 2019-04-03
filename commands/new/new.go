@@ -177,7 +177,6 @@ var repositories = `package repositories
 
 import (
 	"{{.Appname}}/models"
-	"fmt"
 	"github.com/jinzhu/gorm"
 )
 
@@ -239,6 +238,7 @@ func CreatedApp(appPath, appName string) {
 	os.Mkdir(path.Join(appName, "service"), 0755)
 	utils.WriteToFile(path.Join(appName, "conf", "config.yaml"), conf)
 	utils.WriteToFile(path.Join(appName, "config", "config.go"), config)
+	utils.WriteToFile(path.Join(appName, "models", "init.go"), mysqlInit)
 	utils.WriteToFile(path.Join(appName, "service", "TestService.go"), strings.Replace(service, "{{.Appname}}", appName, -1))
 	utils.WriteToFile(path.Join(appName, "repositories", "TestRepo.go"), strings.Replace(repositories, "{{.Appname}}", appName, -1))
 	utils.WriteToFile(path.Join(appName, "main.go"), strings.Replace(main, "{{.AppName}}", appName, -1))
