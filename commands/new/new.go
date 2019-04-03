@@ -195,7 +195,6 @@ func NewTestRepositories() *TestRepositories {
 var service = `package service
 
 import (
-	"{{.Appname}}/models"
 	"{{.Appname}}/repositories"
 )
 
