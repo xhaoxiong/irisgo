@@ -1,4 +1,4 @@
-#### 安装使用
+#### 安装使用(仅支持go1.11以上版本)
 ##### 安装
 ```
 go get github.com/xhaoxiong/irisgo
