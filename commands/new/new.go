@@ -270,6 +270,7 @@ func (this *Common) ReturnSuccess(args ...interface{}) {
 	this.Ctx.JSON(result)
 	this.Ctx.StopExecution()
 	return
+}
 
 `
 
