@@ -362,12 +362,15 @@ func InitRouter(app *iris.Application) {
 var main = `package main
 
 import (
-	"{{.AppName}}/config"
-	"{{.AppName}}/models"
-	"{{.AppName}}/route"
+	
 	"github.com/iris-contrib/middleware/cors"
 	"github.com/kataras/iris"
 	"github.com/spf13/pflag"
+	"github.com/spf13/viper"
+	
+	"{{.AppName}}/config"
+	"{{.AppName}}/models"
+	"{{.AppName}}/route"
 )
 
 var (
