@@ -1,4 +1,4 @@
-module irisgo
+module github.com/xhaoxiong/irisgo
 
 go 1.12
 
