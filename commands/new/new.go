@@ -220,7 +220,7 @@ func NewTestController() *TestController {
 	return &TestController{}
 }
 
-func (this *TestController) PostIndex() {
+func (this *TestController) Get() {
 	this.ReturnSuccess()
 }`
 
