@@ -207,15 +207,165 @@ func NewTestService() *TestService {
 	return &TestService{repo: repositories.NewTestRepositories()}
 }`
 
-var controllers = ``
+var controllers = `package controllers
 
-var route = ``
+import "github.com/kataras/iris"
+
+type TestController struct {
+	Ctx iris.Context
+	Common
+}
+
+func NewTestController() *TestController {
+	return &TestController{}
+}
+
+func (this *TestController) PostIndex() {
+	this.ReturnSuccess()
+}`
+
+var common = `
+package controllers
+
+import "github.com/kataras/iris"
+
+type Common struct {
+	Ctx iris.Context
+}
+
+func (this *Common) ReturnJson(status int, message string, args ...interface{}) {
+	result := make(map[string]interface{})
+	result["code"] = status
+	result["message"] = message
+
+	key := ""
+
+	for _, arg := range args {
+		switch arg.(type) {
+		case string:
+			key = arg.(string)
+
+		default:
+			result[key] = arg
+		}
+	}
+	this.Ctx.JSON(result)
+	this.Ctx.StopExecution()
+	return
+}
+
+func (this *Common) ReturnSuccess(args ...interface{}) {
+	result := make(map[string]interface{})
+	result["code"] = 10000
+	result["message"] = "success"
+	key := ""
+	for _, arg := range args {
+		switch arg.(type) {
+		case string:
+			key = arg.(string)
+		default:
+			result[key] = arg
+		}
+	}
+	this.Ctx.JSON(result)
+	this.Ctx.StopExecution()
+	return
+
+`
+
+var jwt = `
+package middleware
+
+import (
+	"github.com/dgrijalva/jwt-go"
+	jwtmiddleware "github.com/iris-contrib/middleware/jwt"
+
+	"fmt"
+	"github.com/kataras/iris"
+	"github.com/kataras/iris/context"
+	"time"
+)
+
+var JwtAuthMiddleware = jwtmiddleware.New(jwtmiddleware.Config{
+	ValidationKeyGetter: validationKeyGetterFuc,
+	SigningMethod:       jwt.SigningMethodHS256,
+	Expiration:          true,
+	Extractor:           extractor,
+}).Serve
+
+const jwtKey = "{{.Appname}}"
+
+var validationKeyGetterFuc = func(token *jwt.Token) (interface{}, error) {
+	return []byte(jwtKey), nil
+}
+
+var extractor = func(ctx context.Context) (string, error) {
+	authHeader := ctx.GetHeader("token")
+	if authHeader == "" {
+		return "", nil // No error, just no token
+	}
+
+	return authHeader, nil
+}
+
+//注册jwt中间件
+func GetJWT() *jwtmiddleware.Middleware {
+	jwtHandler := jwtmiddleware.New(jwtmiddleware.Config{
+		//这个方法将验证jwt的token
+		ValidationKeyGetter: func(token *jwt.Token) (interface{}, error) {
+			//自己加密的秘钥或者说盐值
+			return []byte(jwtKey), nil
+		},
+		//加密的方式
+		SigningMethod: jwt.SigningMethodHS256,
+		//验证未通过错误处理方式
+		//ErrorHandler: func(context.Context, string)
+		ErrorHandler: func(ctx iris.Context, s string) {
+			ctx.Next()
+		},
+	})
+	return jwtHandler
+}
+
+//生成token
+func GenerateToken(msg string) string {
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"msg": msg,                                                      //openid
+		"iss": "iris_{{.Appname}}",                                           //签发者
+		"iat": time.Now().Unix(),                                        //签发时间
+		"jti": "9527",                                                   //jwt的唯一身份标识，主要用来作为一次性token,从而回避重放攻击。
+		"exp": time.Now().Add(10 * time.Hour * time.Duration(1)).Unix(), //过期时间
+	})
+
+	tokenString, _ := token.SignedString([]byte(jwtKey))
+	fmt.Println("签发时间：", time.Now().Unix())
+	fmt.Println("到期时间：", time.Now().Add(10 * time.Hour * time.Duration(1)).Unix())
+	return tokenString
+}
+`
+
+var route = `package route
+
+import (
+	"github.com/kataras/iris"
+	"github.com/kataras/iris/mvc"
+	"{{.Appname}}/web/controllers"
+)
+
+func InitRouter(app *iris.Application) {
+
+	mvc.New(app.Party("/")).Handle(controllers.NewTestController())
+
+}`
 
 var main = `package main
 
 import (
 	"{{.AppName}}/config"
 	"{{.AppName}}/models"
+	"{{.AppName}}/route"
+	"github.com/iris-contrib/middleware/cors"
+	"github.com/kataras/iris"
 	"github.com/spf13/pflag"
 )
 
@@ -230,7 +380,34 @@ func main() {
 		panic(err)
 	}
 	models.DB.Init()
-}`
+	app := newApp()
+
+	route.InitRouter(app)
+
+	app.Run(iris.Addr(viper.GetString("addr")))
+}
+
+func newApp() *iris.Application {
+	app := iris.New()
+	crs := cors.New(cors.Options{
+		AllowedOrigins:   []string{"*"}, // allows everything, use that to change the hosts.
+		AllowedMethods:   []string{"HEAD", "GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
+		AllowCredentials: true,
+		AllowedHeaders:   []string{"*"},
+	})
+
+	app.Use(crs) //
+	//app.StaticWeb("/assets", "./web/views/admin/assets")
+	//app.RegisterView(iris.HTML("./web/views/admin", ".html"))
+	app.AllowMethods(iris.MethodOptions)
+	//app.Use(middleware.GetJWT().Serve)//是否启用jwt中间件
+	app.Configure(iris.WithOptimizations)
+
+	return app
+}
+
+
+`
 
 func CreatedApp(appPath, appName string) {
 	log.Println("Creating application...")
@@ -238,13 +415,19 @@ func CreatedApp(appPath, appName string) {
 	os.Mkdir(path.Join(appName, "conf"), 0755)
 	os.Mkdir(path.Join(appName, "config"), 0755)
 	os.Mkdir(path.Join(appName, "models"), 0755)
+	os.Mkdir(path.Join(appName, "route"), 0755)
 	os.Mkdir(path.Join(appName, "repositories"), 0755)
 	os.Mkdir(path.Join(appName, "service"), 0755)
+	os.MkdirAll(path.Join(appName, "/web/controllers"), 0755)
+	os.MkdirAll(path.Join(appName, "/web/middleware"), 0755)
 	utils.WriteToFile(path.Join(appName, "conf", "config.yaml"), conf)
 	utils.WriteToFile(path.Join(appName, "config", "config.go"), config)
 	utils.WriteToFile(path.Join(appName, "models", "init.go"), mysqlInit)
 	utils.WriteToFile(path.Join(appName, "service", "TestService.go"), strings.Replace(service, "{{.Appname}}", appName, -1))
 	utils.WriteToFile(path.Join(appName, "repositories", "TestRepo.go"), strings.Replace(repositories, "{{.Appname}}", appName, -1))
+	utils.WriteToFile(path.Join(appName, "route", "route.go"), strings.Replace(route, "{{.Appname}}", appName, -1))
+	utils.WriteToFile(path.Join(appName, "/web/controllers", "controllers.go"), controllers)
+	utils.WriteToFile(path.Join(appName, "/web/middleware", "jwt.go"), strings.Replace(jwt, "{{.Appname}}", appName, -1))
 	utils.WriteToFile(path.Join(appName, "main.go"), strings.Replace(main, "{{.AppName}}", appName, -1))
 
 	log.Println("new application successfully created!")
