@@ -21,7 +21,14 @@ linux下
 
 只有将config.yaml中数据库配置写好才能操作models.GetDB()操作gorm 否则会报错
 
-如遇到翻墙不能get的包请在.mod文件钟加入以下
+方法一:
+设置代理:https://goproxy.io/ 
+
+
+方法二:
+如遇到翻墙不能get的包请在.mod文件中加入以下
+
+
 replace (
 	cloud.google.com/go => github.com/googleapis/google-cloud-go v0.34.0
 	go.opencensus.io => github.com/census-instrumentation/opencensus-go v0.19.0
