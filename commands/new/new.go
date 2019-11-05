@@ -340,9 +340,9 @@ import (
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 
-	"admin_manage/config"
-	"admin_manage/models"
-	"admin_manage/route"
+	"{{.Appname}}/config"
+	"{{.Appname}}/models"
+	"{{.Appname}}/route"
 )
 
 var (
