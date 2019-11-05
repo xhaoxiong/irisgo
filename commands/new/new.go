@@ -404,7 +404,8 @@ func CreatedApp(appPath, appName string) {
 	utils.WriteToFile(path.Join(appName, "/web/controllers", "TestController.go"), controllers)
 	utils.WriteToFile(path.Join(appName, "/web/controllers", "Common.go"), common)
 	utils.WriteToFile(path.Join(appName, "/web/middleware", "jwt.go"), strings.Replace(jwt, "{{.Appname}}", appName, -1))
-	utils.WriteToFile(path.Join(appName, "main.go"), strings.Replace(main, "{{.AppName}}", appName, -1))
+
+	utils.WriteToFile(path.Join(appName, "main.go"), strings.Replace(main, "{{.Appname}}", appName, -1))
 
 	log.Println("new application successfully created!")
 }
