@@ -33,8 +33,6 @@ addr: ":8080"`
 var config = `package config
 
 import (
-	"github.com/fsnotify/fsnotify"
-	"github.com/lexkong/log"
 	"github.com/spf13/viper"
 	"strings"
 )
@@ -51,9 +49,6 @@ func Init(cfg string) error {
 	if err := c.initConfig(); err != nil {
 		return err
 	}
-	c.initLog()
-
-	c.watchConfig()
 	return nil
 
 }
@@ -78,27 +73,6 @@ func (c *Config) initConfig() error {
 	return nil
 }
 
-func (c *Config) initLog() {
-	passLagerCfg := log.PassLagerCfg{
-		Writers:        viper.GetString("log.writers"),
-		LoggerLevel:    viper.GetString("log.logger_level"),
-		LoggerFile:     viper.GetString("log.logger_file"),
-		LogFormatText:  viper.GetBool("log.log_format_text"),
-		RollingPolicy:  viper.GetString("log.rollingPolicy"),
-		LogRotateDate:  viper.GetInt("log.log_rotate_date"),
-		LogRotateSize:  viper.GetInt("log.log_rotate_size"),
-		LogBackupCount: viper.GetInt("log.log_backup_count"),
-	}
-
-	log.InitWithConfig(&passLagerCfg)
-}
-
-func (c *Config) watchConfig() {
-	viper.WatchConfig()
-	viper.OnConfigChange(func(e fsnotify.Event) {
-		log.Infof("Config file changed: %s\n", e.Name)
-	})
-}
 `
 
 var mysqlInit = `package models
@@ -107,7 +81,7 @@ import (
 	"fmt"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
-	"github.com/lexkong/log"
+	"log"
 	"github.com/spf13/viper"
 	"time"
 )
@@ -143,7 +117,7 @@ func openMysqlDB(username, password, addr, name string) *gorm.DB {
 		"Local")
 	db, err := gorm.Open("mysql", config)
 	if err != nil {
-		log.Errorf(err, "Database connection failed. Database name: %s", name)
+		log.Println(err, "Database connection failed. Database name: %s", name)
 	}
 
 	// set for db connection
@@ -166,7 +140,7 @@ func autoMigrate(db *gorm.DB) {
 
 	if err := db.AutoMigrate().Error;
 		err != nil {
-		log.Error("自动建表失败", err)
+		log.Println("自动建表失败", err)
 	}
 }
 
@@ -362,15 +336,13 @@ func InitRouter(app *iris.Application) {
 var main = `package main
 
 import (
-	
-	"github.com/iris-contrib/middleware/cors"
 	"github.com/kataras/iris"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
-	
-	"{{.AppName}}/config"
-	"{{.AppName}}/models"
-	"{{.AppName}}/route"
+
+	"{{.Appname}}/config"
+	"{{.Appname}}/models"
+	"{{.Appname}}/route"
 )
 
 var (
@@ -393,14 +365,14 @@ func main() {
 
 func newApp() *iris.Application {
 	app := iris.New()
-	crs := cors.New(cors.Options{
-		AllowedOrigins:   []string{"*"}, // allows everything, use that to change the hosts.
-		AllowedMethods:   []string{"HEAD", "GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
-		AllowCredentials: true,
-		AllowedHeaders:   []string{"*"},
-	})
-
-	app.Use(crs) //
+	//crs := cors.New(cors.Options{
+	//	AllowedOrigins:   []string{"*"}, // allows everything, use that to change the hosts.
+	//	AllowedMethods:   []string{"HEAD", "GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
+	//	AllowCredentials: true,
+	//	AllowedHeaders:   []string{"*"},
+	//})
+	//
+	//app.Use(crs) //
 	//app.StaticWeb("/assets", "./web/views/admin/assets")
 	//app.RegisterView(iris.HTML("./web/views/admin", ".html"))
 	app.AllowMethods(iris.MethodOptions)
@@ -409,7 +381,6 @@ func newApp() *iris.Application {
 
 	return app
 }
-
 
 `
 
@@ -433,7 +404,8 @@ func CreatedApp(appPath, appName string) {
 	utils.WriteToFile(path.Join(appName, "/web/controllers", "TestController.go"), controllers)
 	utils.WriteToFile(path.Join(appName, "/web/controllers", "Common.go"), common)
 	utils.WriteToFile(path.Join(appName, "/web/middleware", "jwt.go"), strings.Replace(jwt, "{{.Appname}}", appName, -1))
-	utils.WriteToFile(path.Join(appName, "main.go"), strings.Replace(main, "{{.AppName}}", appName, -1))
+
+	utils.WriteToFile(path.Join(appName, "main.go"), strings.Replace(main, "{{.Appname}}", appName, -1))
 
 	log.Println("new application successfully created!")
 }

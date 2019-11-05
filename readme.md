@@ -22,7 +22,7 @@ linux下
 只有将config.yaml中数据库配置写好才能操作models.GetDB()操作gorm 否则会报错
 
 方法一:
-设置代理:https://goproxy.cn/ 
+设置代理:https://goproxy.io/ 
 
 
 方法二:
