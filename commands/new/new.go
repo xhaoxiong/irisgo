@@ -34,7 +34,7 @@ var config = `package config
 
 import (
 	"github.com/fsnotify/fsnotify"
-	"github.com/lexkong/log"
+	"log"
 	"github.com/spf13/viper"
 	"strings"
 )
@@ -96,7 +96,7 @@ func (c *Config) initLog() {
 func (c *Config) watchConfig() {
 	viper.WatchConfig()
 	viper.OnConfigChange(func(e fsnotify.Event) {
-		log.Infof("Config file changed: %s\n", e.Name)
+		log.Println("Config file changed: %s\n", e.Name)
 	})
 }
 `
