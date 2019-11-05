@@ -183,7 +183,7 @@ func NewTestService() *TestService {
 
 var controllers = `package controllers
 
-import "github.com/kataras/iris"
+import "github.com/kataras/iris/v12"
 
 type TestController struct {
 	Ctx iris.Context
@@ -201,7 +201,7 @@ func (this *TestController) Get() {
 var common = `
 package controllers
 
-import "github.com/kataras/iris"
+import "github.com/kataras/iris/v12"
 
 type Common struct {
 	Ctx iris.Context
@@ -252,13 +252,12 @@ var jwt = `
 package middleware
 
 import (
-	"github.com/dgrijalva/jwt-go"
-	jwtmiddleware "github.com/iris-contrib/middleware/jwt"
+"github.com/dgrijalva/jwt-go"
+jwtmiddleware "github.com/iris-contrib/middleware/jwt"
+"github.com/kataras/iris/v12/context"
 
-	"fmt"
-	"github.com/kataras/iris"
-	"github.com/kataras/iris/context"
-	"time"
+"fmt"
+"time"
 )
 
 var JwtAuthMiddleware = jwtmiddleware.New(jwtmiddleware.Config{
@@ -295,7 +294,7 @@ func GetJWT() *jwtmiddleware.Middleware {
 		SigningMethod: jwt.SigningMethodHS256,
 		//验证未通过错误处理方式
 		//ErrorHandler: func(context.Context, string)
-		ErrorHandler: func(ctx iris.Context, s string) {
+		ErrorHandler: func(ctx context.Context, e error) {
 			ctx.Next()
 		},
 	})
@@ -306,7 +305,7 @@ func GetJWT() *jwtmiddleware.Middleware {
 func GenerateToken(msg string) string {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"msg": msg,                                                      //openid
-		"iss": "iris_{{.Appname}}",                                           //签发者
+		"iss": "iris_{{.Appname}}",                                      //签发者
 		"iat": time.Now().Unix(),                                        //签发时间
 		"jti": "9527",                                                   //jwt的唯一身份标识，主要用来作为一次性token,从而回避重放攻击。
 		"exp": time.Now().Add(10 * time.Hour * time.Duration(1)).Unix(), //过期时间
@@ -314,7 +313,7 @@ func GenerateToken(msg string) string {
 
 	tokenString, _ := token.SignedString([]byte(jwtKey))
 	fmt.Println("签发时间：", time.Now().Unix())
-	fmt.Println("到期时间：", time.Now().Add(10 * time.Hour * time.Duration(1)).Unix())
+	fmt.Println("到期时间：", time.Now().Add(10*time.Hour*time.Duration(1)).Unix())
 	return tokenString
 }
 `
@@ -322,8 +321,8 @@ func GenerateToken(msg string) string {
 var route = `package route
 
 import (
-	"github.com/kataras/iris"
-	"github.com/kataras/iris/mvc"
+	"github.com/kataras/iris/v12"
+	"github.com/kataras/iris/v12/mvc"
 	"{{.Appname}}/web/controllers"
 )
 
@@ -336,10 +335,11 @@ func InitRouter(app *iris.Application) {
 var main = `package main
 
 import (
-	"github.com/kataras/iris"
+	"github.com/kataras/iris/v12"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
-
+	
+	"{{.Appname}}/web/middleware"
 	"{{.Appname}}/config"
 	"{{.Appname}}/models"
 	"{{.Appname}}/route"
@@ -376,7 +376,7 @@ func newApp() *iris.Application {
 	//app.StaticWeb("/assets", "./web/views/admin/assets")
 	//app.RegisterView(iris.HTML("./web/views/admin", ".html"))
 	app.AllowMethods(iris.MethodOptions)
-	//app.Use(middleware.GetJWT().Serve)//是否启用jwt中间件
+	app.Use(middleware.GetJWT().Serve)//是否启用jwt中间件
 	app.Configure(iris.WithOptimizations)
 
 	return app
