@@ -3,6 +3,7 @@
 ```
 go get -u -v github.com/xhaoxiong/irisgo
 
+也可以直接clone编译，最终目的是编译好直接跑就好了。
 ```
 ##### 使用
 ```
