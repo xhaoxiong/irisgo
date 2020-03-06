@@ -1,4 +1,4 @@
-#### 安装使用(仅支持go1.11以上版本)
+#### 安装使用(仅支持go1.11以上版本推荐使用go1.13版本，irisv12要求go1.13)
 ##### 安装
 ```
 go get -u -v github.com/xhaoxiong/irisgo
@@ -23,7 +23,7 @@ linux下
 只有将config.yaml中数据库配置写好才能操作models.GetDB()操作gorm 否则会报错
 
 方法一:
-设置代理:https://goproxy.io/ 
+设置代理:GOPROXY="https://goproxy.cn"
 
 
 方法二:
