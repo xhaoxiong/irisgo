@@ -5,7 +5,7 @@
  * @Version: 1.0.0
  * @Date: 2020/5/12 2:10 下午
  */
-package commands
+package api_template
 
 var conf = `gormlog: true
 app_name: "irisgo"

@@ -3,7 +3,7 @@
 *@Date: 2019/4/3
 *@Description: CREATE GO FILE commands
  */
-package commands
+package api_template
 
 import (
 	"github.com/xhaoxiong/irisgo/utils"

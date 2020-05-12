@@ -1,3 +1,5 @@
+
+##V1.0.0
 #### 安装使用(仅支持go1.11以上版本推荐使用go1.13版本，irisv12要求go1.13)
 ##### 安装
 ```
@@ -85,5 +87,23 @@ App
     │  TestController.go
     └ middleware
        jwt.go
+       logrus.go
+
+```
+#####  <a href="https://github.com/iris-contrib/swagger">引入swagger点击此处(需采用v12版本)</a>
+
+##### V1.1.0
+#### 安装使用(仅支持go1.11以上版本推荐使用go1.13版本，irisv12要求go1.13)
+##### 安装(同v1.0.0)
+##### 使用(修改了命令行参数，及其对应的代码结构，具体操作如下)
+```
+Mac: 
+命令使用如下:
+不带-name参数将默认生成irisApp
+>~ ./irisgo -name=test
+默认生成api模板脚手架
+
+Windows:
+>~ irisgo.exe -name=test 
 
 ```

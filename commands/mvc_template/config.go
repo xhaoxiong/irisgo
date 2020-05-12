@@ -5,7 +5,7 @@
  * @Version: 1.0.0
  * @Date: 2020/5/12 2:11 下午
  */
-package commands
+package mvc_template
 
 var config = `package config
 
