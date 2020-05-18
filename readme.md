@@ -100,10 +100,10 @@ App
 Mac: 
 命令使用如下:
 不带-name参数将默认生成irisApp
->~ ./irisgo -name=test
+>~ ./irisgo -n test
 默认生成api模板脚手架
 
 Windows:
->~ irisgo.exe -name=test 
+>~ irisgo.exe -n test 
 
 ```
