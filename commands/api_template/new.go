@@ -46,19 +46,13 @@ func main() {
 
 func newApp() *iris.Application {
 	app := iris.New()
-	//crs := cors.New(cors.Options{
-	//	AllowedOrigins:   []string{"*"}, // allows everything, use that to change the hosts.
-	//	AllowedMethods:   []string{"HEAD", "GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
-	//	AllowCredentials: true,
-	//	AllowedHeaders:   []string{"*"},
-	//})
-	//
-	//app.Use(crs) //
-	//app.StaticWeb("/assets", "./web/views/admin/assets")
-	//app.RegisterView(iris.HTML("./web/views/admin", ".html"))
+
+	app.Use(middleware.Cors) //是否启用跨域中间件
+	app.HandleDir("/public", "./web/views/static") //是否指定静态目录
+	//app.RegisterView(iris.HTML("./web/views/admin", ".html")) //是否注册模板
 	app.AllowMethods(iris.MethodOptions)
-	app.Use(middleware.GetJWT().Serve)//是否启用jwt中间件
-	app.Use(middleware.LogMiddle)//是否启用logrus中间件
+	app.Use(middleware.GetJWT().Serve) //是否启用jwt中间件
+	app.Use(middleware.LogMiddle)      //是否启用logrus中间件
 	app.Configure(iris.WithOptimizations)
 
 	return app
@@ -88,6 +82,7 @@ func CreatedApp(appPath, appName string) {
 	utils.WriteToFile(path.Join(appName, "/web/controllers", "Common.go"), common)
 	utils.WriteToFile(path.Join(appName, "/web/middleware", "jwt.go"), strings.Replace(jwt, "{{.Appname}}", appName, -1))
 	utils.WriteToFile(path.Join(appName, "/web/middleware", "logrus.go"), strings.Replace(logrus, "{{.Appname}}", appName, -1))
+	utils.WriteToFile(path.Join(appName, "/web/middleware", "Cors.go"), strings.Replace(cors, "{{.Appname}}", appName, -1))
 	utils.WriteToFile(path.Join(appName, "main.go"), strings.Replace(main, "{{.Appname}}", appName, -1))
 	log.Println("new application successfully created!")
 }
