@@ -81,7 +81,7 @@ var logrus = `package middleware
 import (
 	"{{.Appname}}/models"
 	"fmt"
-	"github.com/kataras/iris/v12/context"
+	"github.com/kataras/iris/v12"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"runtime"
@@ -90,7 +90,7 @@ import (
 )
 
 
-func LogMiddle(ctx context.Context) {
+func LogMiddle(ctx iris.Context) {
 	appName := viper.GetString("app_name")
 	traceLogger := models.NewLogger()
 	traceLogger.Proto = ctx.Request().Proto
