@@ -53,7 +53,7 @@ func GetJWT() *jwtmiddleware.Middleware {
 		SigningMethod: jwt.SigningMethodHS256,
 		//验证未通过错误处理方式
 		//ErrorHandler: func(context.Context, string)
-		ErrorHandler: func(ctx context.Context, e error) {
+		ErrorHandler: func(ctx iris.Context, e error) {
 			ctx.Next()
 		},
 	})
@@ -77,8 +77,7 @@ func GenerateToken(msg string) string {
 }
 `
 
-
-var logrus=`package middleware
+var logrus = `package middleware
 
 import (
 	"{{.Appname}}/models"
