@@ -1,3 +1,9 @@
+##### 更新日志
+```
+v1.0.0 默认初始化基础的api模板 gorm+iris restful接口
+v1.0.1-v1.0.5 修改iris版本更新代码
+v1.0.1-v1.0.6 将jinzhu/gorm修改为gorm.io/gorm，并且添加casbin权限初始化
+```
 
 ##V1.0.0
 #### 安装使用(仅支持go1.11以上版本推荐使用go1.13版本，irisv12要求go1.13)
