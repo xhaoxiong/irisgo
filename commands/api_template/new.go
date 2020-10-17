@@ -20,6 +20,7 @@ import (
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 	"github.com/iris-contrib/middleware/cors"
+    cm "github.com/iris-contrib/middleware/casbin"
 
 	"{{.Appname}}/web/middleware"
 	"{{.Appname}}/config"
@@ -47,18 +48,18 @@ func main() {
 }
 
 func newApp() *iris.Application {
-	app := iris.New()
-	crs := cors.New(cors.Options{
-		AllowedOrigins:   []string{"*"}, // 这里写允许的服务器地址，* 号标识任意
-		AllowCredentials: true,
-	})
-	app.Use(crs) //是否启用跨域中间件
-	app.HandleDir("/public", "./web/views/static") //是否指定静态目录
-	//app.RegisterView(iris.HTML("./web/views/admin", ".html")) //是否注册模板
-	app.AllowMethods(iris.MethodOptions)
-	app.Use(middleware.GetJWT().Serve) //是否启用jwt中间件
-	app.Use(middleware.LogMiddle)      //是否启用logrus中间件
-	app.Configure(iris.WithOptimizations)
+    app := iris.New()
+    crs := cors.New(cors.Options{
+        AllowedOrigins:   []string{"*"}, // 这里写允许的服务器地址，* 号标识任意
+        AllowCredentials: true,
+    })
+    casbinMiddleware := cm.New(models.Enforcer)
+    app.HandleDir("/public", "./web/views/static") //是否指定静态目录
+    //app.RegisterView(iris.HTML("./web/views/admin", ".html"))
+    app.AllowMethods(iris.MethodOptions)
+    //是否启用跨域中间件,是否启用jwt中间件,是否启用logrus中间件
+    app.Use(crs, middleware.GetJWT().Serve, middleware.LogMiddle, casbinMiddleware.ServeHTTP)
+    app.Configure(iris.WithOptimizations)
 
 	return app
 }
