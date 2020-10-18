@@ -58,6 +58,7 @@ package models
     })
     if err != nil {
         logrus.Println(err, "Database connection failed. Database name: %s", name)
+		return db
     }
     dbc, err := db.DB()
     setupDB(dbc)

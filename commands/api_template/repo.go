@@ -11,7 +11,7 @@ var repositories = `package repositories
 
 import (
 	"{{.Appname}}/models"
-	"github.com/jinzhu/gorm"
+	""gorm.io/gorm""
 )
 
 type TestRepositories struct {
