@@ -20,6 +20,7 @@ package models
     "gorm.io/driver/mysql"
     "gorm.io/gorm"
     "gorm.io/gorm/logger"
+	"gorm.io/gorm/schema"
     "log"
     "time"
  )
@@ -55,6 +56,12 @@ package models
         "Local")
     db, err := gorm.Open(mysql.Open(config), &gorm.Config{
         Logger: logger.Default.LogMode(logger.Silent),
+		// 表名前缀，User 的表名应该是 t_users
+		// 使用单数表名，启用该选项，此时，User 的表名应该是 t_user
+		NamingStrategy: schema.NamingStrategy{
+			TablePrefix:   "",   
+			SingularTable: true, 
+		},
     })
     if err != nil {
         logrus.Println(err, "Database connection failed. Database name: %s", name)
