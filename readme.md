@@ -5,7 +5,7 @@ v1.1.1-v1.1.5 修改iris版本更新代码，添加日志组件
 v1.1.1-v1.1.6 将jinzhu/gorm修改为gorm.io/gorm，并且添加casbin权限初始化
 ```
 
-##V1.0.0
+## V1.0.0
 #### 安装使用(仅支持go1.11以上版本推荐使用go1.13版本，irisv12要求go1.13)
 ##### 安装
 ```
@@ -71,6 +71,24 @@ replace (
 
 ```
 
+#####  <a href="https://github.com/iris-contrib/swagger">引入swagger点击此处(需采用v12版本)</a>
+
+##### V1.1.0-v1.16
+#### 安装使用(仅支持go1.11以上版本推荐使用go1.13版本，irisv12要求go1.13)
+##### 安装(同v1.0.0)
+##### 使用(修改了命令行参数，及其对应的代码结构，具体操作如下)
+```
+Mac: 
+命令使用如下:
+不带-name参数将默认生成irisApp
+>~ ./irisgo -n test
+默认生成api模板脚手架
+
+Windows:
+>~ irisgo.exe -n test 
+
+```
+
 
 ##### 生成的目录结构如下
 
@@ -86,7 +104,8 @@ App
 └ ─ ─repositories[持久层]
 │      TestRepo.go
 └ ─ ─service
-│
+└ ─ -route
+│    	route.go
 └ ─ ─web
     └ controllers
     │  Common.go
@@ -96,20 +115,4 @@ App
        logrus.go
 
 ```
-#####  <a href="https://github.com/iris-contrib/swagger">引入swagger点击此处(需采用v12版本)</a>
 
-##### V1.1.0
-#### 安装使用(仅支持go1.11以上版本推荐使用go1.13版本，irisv12要求go1.13)
-##### 安装(同v1.0.0)
-##### 使用(修改了命令行参数，及其对应的代码结构，具体操作如下)
-```
-Mac: 
-命令使用如下:
-不带-name参数将默认生成irisApp
->~ ./irisgo -n test
-默认生成api模板脚手架
-
-Windows:
->~ irisgo.exe -n test 
-
-```
