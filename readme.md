@@ -6,6 +6,7 @@ v1.1.1-v1.1.6 将jinzhu/gorm修改为gorm.io/gorm，并且添加casbin权限初�
 ```
 
 ##### <a href="#">DEMO后台管理(iris-react-admin)正在开发中预计12月份第一个基础版本</a> 
+##### <a href="https://github.com/xhaoxiong/irisgo/releases">Releases版本</a>
 
 ## V1.0.0
 #### 安装使用(仅支持go1.11以上版本推荐使用go1.13版本，irisv12要求go1.13)
